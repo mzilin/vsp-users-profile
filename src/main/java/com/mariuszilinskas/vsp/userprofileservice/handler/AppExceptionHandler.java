@@ -2,6 +2,7 @@ package com.mariuszilinskas.vsp.userprofileservice.handler;
 
 import com.mariuszilinskas.vsp.userprofileservice.dto.ErrorResponse;
 import com.mariuszilinskas.vsp.userprofileservice.dto.FieldErrorResponse;
+import com.mariuszilinskas.vsp.userprofileservice.exception.FileUploadException;
 import com.mariuszilinskas.vsp.userprofileservice.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +53,12 @@ public class AppExceptionHandler {
     }
 
     // --------------------- Specific -----------------------------
+
+
+    @ExceptionHandler(FileUploadException.class)
+    public ResponseEntity<ErrorResponse> handleFileUploadException(FileUploadException ex) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     // -----------------------------------------------------------
 
