@@ -15,9 +15,9 @@ import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
-public class AmazonS3ServiceImpl implements S3Service {
+public class AwsS3ServiceImpl implements S3Service {
 
-    private static final Logger logger = LoggerFactory.getLogger(AmazonS3ServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(AwsS3ServiceImpl.class);
     private final AmazonS3 s3Client;
 
     @Value("${aws.s3.region}")
