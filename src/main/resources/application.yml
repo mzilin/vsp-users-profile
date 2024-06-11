@@ -29,6 +29,14 @@ spring:
     hibernate:
       ddl-auto: update
 
+# AWS configuration
+aws:
+  accessKey: ${AWS_ACCESS_KEY}
+  secretKey: ${AWS_SECRET_KEY}
+  s3:
+    region: ${AWS_S3_REGION}
+    avatarBucketName: ${AWS_AVATAR_BUCKET_NAME}
+
 # Eureka configuration
 eureka:
   client:

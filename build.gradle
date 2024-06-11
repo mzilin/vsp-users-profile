@@ -41,6 +41,9 @@ dependencies {
     implementation 'org.flywaydb:flyway-core'
     runtimeOnly 'org.postgresql:postgresql'
 
+    // Data-storage-related
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.739'
+
     // Other dependencies
     implementation 'org.jetbrains:annotations:24.0.1'
     implementation 'io.github.openfeign:feign-jackson'
