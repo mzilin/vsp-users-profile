@@ -35,9 +35,6 @@ public class AvatarServiceImplTest {
     @Mock
     private S3Service s3Service;
 
-    @Mock
-    private MultipartFile multipartFile;
-
     @InjectMocks
     private AvatarServiceImpl avatarService;
 
@@ -45,6 +42,7 @@ public class AvatarServiceImplTest {
     private final Avatar avatar = new Avatar();
     private final Avatar avatar2 = new Avatar();
     private CreateAvatarRequest createRequest;
+    private MultipartFile multipartFile;
 
     // ------------------------------------
 
@@ -169,9 +167,6 @@ public class AvatarServiceImplTest {
         verify(avatarRepository, times(1)).findAll();
 
     }
-
-    // ------------------------------------
-
 
     // ------------------------------------
 
