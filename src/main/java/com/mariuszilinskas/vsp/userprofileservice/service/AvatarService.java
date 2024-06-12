@@ -13,6 +13,8 @@ public interface AvatarService {
 
     List<Avatar> getAvatars();
 
+    Avatar getAvatar(UUID avatarId);
+
     void deleteAvatar(UUID avatarId);
 
 }

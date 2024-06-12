@@ -92,6 +92,12 @@ public class AvatarServiceImpl implements AvatarService {
     }
 
     @Override
+    public Avatar getAvatar(UUID avatarId) {
+        logger.info("Getting Avatar [id: '{}']", avatarId);
+        return findAvatarById(avatarId);
+    }
+
+    @Override
     public void deleteAvatar(UUID avatarId) {
         logger.info("Deleting Avatar [id: '{}']", avatarId);
         Avatar avatar = findAvatarById(avatarId);
