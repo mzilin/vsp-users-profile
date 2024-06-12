@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface UserProfileService {
 
-    UserProfile createUserProfile(CreateUserProfileRequest request);
+    UserProfile createUserProfile(UUID userId, CreateUserProfileRequest request);
 
     List<UserProfile> getAllUserProfiles(UUID userId);
 
@@ -17,5 +17,7 @@ public interface UserProfileService {
     UserProfile updateUserProfile(UUID userId, UUID profileId, CreateUserProfileRequest request);
 
     void deleteUserProfile(UUID userId, UUID profileId);
+
+    void deleteAllUserProfiles(UUID userId);
 
 }
