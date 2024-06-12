@@ -165,7 +165,37 @@ public class AvatarServiceImplTest {
         assertEquals(avatar2.getAvatarName(), response.get(1).getAvatarName());
 
         verify(avatarRepository, times(1)).findAll();
+    }
 
+    // ------------------------------------
+
+    @Test
+    void testGetAvatar_Success() {
+        // Arrange
+        when(avatarRepository.findById(avatarId)).thenReturn(Optional.of(avatar));
+
+        // Act
+        Avatar response = avatarService.getAvatar(avatarId);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(avatar.getId(), response.getId());
+        assertEquals(avatar.getAvatarName(), response.getAvatarName());
+
+        verify(avatarRepository, times(1)).findById(avatarId);
+    }
+
+    @Test
+    void testGetAvatar_NonExistentAvatar() {
+        // Arrange
+        UUID nonExistentAvatarId = UUID.randomUUID();
+        when(avatarRepository.findById(nonExistentAvatarId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> avatarService.getAvatar(nonExistentAvatarId));
+
+        // Assert
+        verify(avatarRepository, times(1)).findById(nonExistentAvatarId);
     }
 
     // ------------------------------------
