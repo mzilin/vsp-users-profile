@@ -2,7 +2,9 @@ package com.mariuszilinskas.vsp.userprofileservice.service;
 
 import com.mariuszilinskas.vsp.userprofileservice.dto.CreateAvatarRequest;
 import com.mariuszilinskas.vsp.userprofileservice.exception.EntityExistsException;
+import com.mariuszilinskas.vsp.userprofileservice.exception.FileUploadException;
 import com.mariuszilinskas.vsp.userprofileservice.exception.IncorrectFileException;
+import com.mariuszilinskas.vsp.userprofileservice.exception.ResourceNotFoundException;
 import com.mariuszilinskas.vsp.userprofileservice.model.Avatar;
 import com.mariuszilinskas.vsp.userprofileservice.repository.AvatarRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,8 +56,13 @@ public class AvatarServiceImplTest {
 
         avatar.setId(avatarId);
         avatar.setAvatarName("Default");
+        avatar.setObjectKey("test-avatar-key-1");
+        avatar.setImageLink("http://example.com/test-avatar-key-1.jpg");
+
         avatar2.setId(UUID.randomUUID());
         avatar2.setAvatarName("Kids");
+        avatar2.setObjectKey("test-avatar-key-2");
+        avatar2.setImageLink("http://example.com/test-avatar-key-2.jpg");
 
         multipartFile = new MockMultipartFile("file", "filename.jpg", "image/jpeg", "some content".getBytes());
         createRequest = new CreateAvatarRequest(avatar.getAvatarName(), multipartFile);
@@ -150,5 +159,59 @@ public class AvatarServiceImplTest {
 
     // ------------------------------------
 
+
+    // ------------------------------------
+
+    @Test
+    void testDeleteAvatar_Success() {
+        // Arrange
+        when(avatarRepository.findById(avatarId)).thenReturn(Optional.of(avatar));
+        doNothing().when(s3Service).deleteFile(eq(avatar.getObjectKey()), anyString());
+        doNothing().when(avatarRepository).delete(avatar);
+
+        // Act
+        avatarService.deleteAvatar(avatarId);
+
+        // Assert
+        verify(avatarRepository, times(1)).findById(avatarId);
+        verify(s3Service, times(1)).deleteFile(eq(avatar.getObjectKey()), anyString());
+        verify(avatarRepository, times(1)).delete(avatar);
+
+        when(avatarRepository.findById(avatarId)).thenReturn(Optional.empty());
+        assertFalse(avatarRepository.findById(avatarId).isPresent());
+    }
+
+    @Test
+    void testDeleteAvatar_S3BucketError() {
+        // Arrange
+        when(avatarRepository.findById(avatarId)).thenReturn(Optional.of(avatar));
+        doThrow(FileUploadException.class).when(s3Service).deleteFile(eq(avatar.getObjectKey()), anyString());
+
+        // Act & Assert
+        assertThrows(FileUploadException.class, () -> avatarService.deleteAvatar(avatarId));
+
+        // Assert
+        verify(avatarRepository, times(1)).findById(avatarId);
+        verify(s3Service, times(1)).deleteFile(eq(avatar.getObjectKey()), anyString());
+        verify(avatarRepository, never()).delete(avatar);
+
+        when(avatarRepository.findById(avatarId)).thenReturn(Optional.of(avatar));
+        assertTrue(avatarRepository.findById(avatarId).isPresent());
+    }
+
+    @Test
+    void testDeleteAvatar_NonExistingToken() {
+        // Arrange
+        UUID nonExistentAvatarId = UUID.randomUUID();
+        when(avatarRepository.findById(nonExistentAvatarId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> avatarService.deleteAvatar(nonExistentAvatarId));
+
+        // Assert
+        verify(avatarRepository, times(1)).findById(nonExistentAvatarId);
+        verify(s3Service, never()).deleteFile(anyString(), anyString());
+        verify(avatarRepository, never()).delete(any(Avatar.class));
+    }
 
 }
