@@ -29,8 +29,9 @@ public class UserProfile {
     @Column(name = "profile_name", nullable = false)
     private String profileName;
 
-    @Column(name = "avatar_id", nullable = false)
-    private UUID avatarId;
+    @ManyToOne
+    @JoinColumn(name = "avatar_id", nullable = false)
+    private Avatar avatar;
 
     @Column(name = "is_kid")
     private boolean isKid;
