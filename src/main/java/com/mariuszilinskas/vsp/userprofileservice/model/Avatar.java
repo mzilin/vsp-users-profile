@@ -25,8 +25,11 @@ public class Avatar {
     @Column(updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "avatar_name", nullable = false)
+    @Column(name = "avatar_name", nullable = false, unique = true)
     private String avatarName;
+
+    @Column(name = "object_key", nullable = false)
+    private String objectKey;
 
     @Column(name = "image_link", nullable = false)
     private String imageLink;
