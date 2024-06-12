@@ -17,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -36,6 +38,7 @@ public class AvatarServiceImplTest {
     @InjectMocks
     private AvatarServiceImpl avatarService;
 
+    private final UUID avatarId = UUID.randomUUID();
     private final Avatar avatar = new Avatar();
     private final Avatar avatar2 = new Avatar();
     private CreateAvatarRequest createRequest;
@@ -47,7 +50,9 @@ public class AvatarServiceImplTest {
         setPrivateField(avatarService, "avatarBucketName", "bucket-name");
         setPrivateField(avatarService, "region", "region-name");
 
+        avatar.setId(avatarId);
         avatar.setAvatarName("Default");
+        avatar2.setId(UUID.randomUUID());
         avatar2.setAvatarName("Kids");
 
         multipartFile = new MockMultipartFile("file", "filename.jpg", "image/jpeg", "some content".getBytes());
@@ -118,6 +123,29 @@ public class AvatarServiceImplTest {
         verify(avatarRepository, times(1)).existsByAvatarName(createRequest.avatarName());
         verify(s3Service, never()).uploadFile(anyString(), anyString(), any(MultipartFile.class));
         verify(avatarRepository, never()).save(any(Avatar.class));
+    }
+
+    // ------------------------------------
+
+    @Test
+    void testGetAvatars_Success() {
+        // Arrange
+        List<Avatar> avatars = List.of(avatar, avatar2);
+        when(avatarRepository.findAll()).thenReturn(avatars);
+
+        // Act
+        List<Avatar> response = avatarService.getAvatars();
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(2, response.size());
+        assertEquals(avatar.getId(), response.get(0).getId());
+        assertEquals(avatar.getAvatarName(), response.get(0).getAvatarName());
+        assertEquals(avatar2.getId(), response.get(1).getId());
+        assertEquals(avatar2.getAvatarName(), response.get(1).getAvatarName());
+
+        verify(avatarRepository, times(1)).findAll();
+
     }
 
     // ------------------------------------
