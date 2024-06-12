@@ -17,6 +17,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Service implementation for managing user avatars.
+ * This service handles user creation, retrieval and deletion.
+ *
+ * @author Marius Zilinskas
+ */
 @Service
 @RequiredArgsConstructor
 public class AvatarServiceImpl implements AvatarService {

@@ -12,6 +12,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+/**
+ * Service implementation for managing files in AWS S3.
+ * This service handles file uploads and deletions in S3 buckets.
+ *
+ * @author Marius Zilinskas
+ */
 @Service
 @RequiredArgsConstructor
 public class AwsS3ServiceImpl implements S3Service {
