@@ -7,7 +7,6 @@ import com.mariuszilinskas.vsp.userprofileservice.exception.FileUploadException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,11 +19,8 @@ public class AwsS3ServiceImpl implements S3Service {
     private static final Logger logger = LoggerFactory.getLogger(AwsS3ServiceImpl.class);
     private final AmazonS3 s3Client;
 
-    @Value("${aws.s3.region}")
-    private String region;
-
     @Override
-    public String uploadFile(String bucketName, String objectKey, MultipartFile file) throws IOException {
+    public void uploadFile(String bucketName, String objectKey, MultipartFile file) throws IOException {
         logger.info("Uploading file '{}' to s3 '{}' bucket", objectKey, bucketName);
 
         try {
@@ -33,7 +29,6 @@ public class AwsS3ServiceImpl implements S3Service {
             metadata.setContentType(file.getContentType());
 
             s3Client.putObject(bucketName, objectKey, file.getInputStream(), metadata);
-            return generateObjectUrl(bucketName, objectKey);
 
         } catch (AmazonS3Exception e) {
             if (e.getStatusCode() == 404) {
@@ -46,10 +41,6 @@ public class AwsS3ServiceImpl implements S3Service {
         } catch (Exception e) {
             throw new FileUploadException("Error occurred while uploading file: " + e.getMessage(), e);
         }
-    }
-
-    private String generateObjectUrl(String bucketName, String objectKey) {
-        return String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region, objectKey);
     }
 
     @Override
