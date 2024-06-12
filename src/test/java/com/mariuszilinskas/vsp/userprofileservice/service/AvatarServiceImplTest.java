@@ -238,7 +238,7 @@ public class AvatarServiceImplTest {
     }
 
     @Test
-    void testDeleteAvatar_NonExistingToken() {
+    void testDeleteAvatar_NonExistingAvatar() {
         // Arrange
         UUID nonExistentAvatarId = UUID.randomUUID();
         when(avatarRepository.findById(nonExistentAvatarId)).thenReturn(Optional.empty());
