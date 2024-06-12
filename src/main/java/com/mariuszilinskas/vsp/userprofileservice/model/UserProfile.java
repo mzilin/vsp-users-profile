@@ -26,12 +26,11 @@ public class UserProfile {
     @Column(name = "user_id", nullable = false)
     private UUID userId;
 
-    @Column(nullable = false)
-    private String name;
+    @Column(name = "profile_name", nullable = false)
+    private String profileName;
 
-    @ManyToOne
-    @JoinColumn(name = "avatar_id", nullable = false)
-    private Avatar avatar;
+    @Column(name = "avatar_id", nullable = false)
+    private UUID avatarId;
 
     @Column(name = "is_kid")
     private boolean isKid;
