@@ -160,4 +160,50 @@ public class UserProfileServiceImplTest {
     }
 
     // ------------------------------------
+
+    @Test
+    void testDeleteUserProfile_Success() {
+        // Arrange
+        when(profileRepository.findByIdAndUserId(profileId, userId)).thenReturn(Optional.of(profile));
+        doNothing().when(profileRepository).delete(profile);
+
+        // Act
+        profileService.deleteUserProfile(userId, profileId);
+
+        // Assert
+        verify(profileRepository, times(1)).findByIdAndUserId(profileId, userId);
+        verify(profileRepository, times(1)).delete(profile);
+
+        when(profileRepository.findByIdAndUserId(profileId, userId)).thenReturn(Optional.empty());
+        assertFalse(profileRepository.findByIdAndUserId(profileId, userId).isPresent());
+    }
+
+    @Test
+    void testDeleteUserProfile_NonExistingProfile() {
+        // Arrange
+        UUID nonExistentAvatarId = UUID.randomUUID();
+        when(profileRepository.findByIdAndUserId(nonExistentAvatarId, userId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> profileService.deleteUserProfile(userId, nonExistentAvatarId));
+
+        // Assert
+        verify(profileRepository, times(1)).findByIdAndUserId(nonExistentAvatarId, userId);
+        verify(profileRepository, never()).delete(any(UserProfile.class));
+    }
+
+    // ------------------------------------
+
+    @Test
+    void testDeleteAllUserProfiles_Success() {
+        // Arrange
+        doNothing().when(profileRepository).deleteAllByUserId(userId);
+
+        // Act
+        profileService.deleteAllUserProfiles(userId);
+
+        // Assert
+        verify(profileRepository, times(1)).deleteAllByUserId(userId);
+    }
+
 }
