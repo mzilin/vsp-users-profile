@@ -54,12 +54,12 @@ public class AvatarServiceImplTest {
         avatar.setId(avatarId);
         avatar.setAvatarName("Default");
         avatar.setObjectKey("test-avatar-key-1");
-        avatar.setImageLink("http://example.com/test-avatar-key-1.jpg");
+        avatar.setImageUrl("http://example.com/test-avatar-key-1.jpg");
 
         avatar2.setId(UUID.randomUUID());
         avatar2.setAvatarName("Kids");
         avatar2.setObjectKey("test-avatar-key-2");
-        avatar2.setImageLink("http://example.com/test-avatar-key-2.jpg");
+        avatar2.setImageUrl("http://example.com/test-avatar-key-2.jpg");
 
         multipartFile = new MockMultipartFile("file", "filename.jpg", "image/jpeg", "some content".getBytes());
         createRequest = new CreateAvatarRequest(avatar.getAvatarName(), multipartFile);
@@ -98,7 +98,7 @@ public class AvatarServiceImplTest {
         Avatar savedAvatar = captor.getValue();
         assertEquals(createRequest.avatarName(), savedAvatar.getAvatarName());
         assertNotNull(savedAvatar.getObjectKey());
-        assertNotNull(savedAvatar.getImageLink());
+        assertNotNull(savedAvatar.getImageUrl());
     }
 
     @Test

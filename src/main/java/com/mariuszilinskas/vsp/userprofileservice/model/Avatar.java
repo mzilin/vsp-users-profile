@@ -31,7 +31,7 @@ public class Avatar {
     @Column(name = "object_key", nullable = false)
     private String objectKey;
 
-    @Column(name = "image_link", nullable = false)
-    private String imageLink;
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
 
 }

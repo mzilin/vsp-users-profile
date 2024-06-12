@@ -60,7 +60,7 @@ public class AvatarServiceImpl implements AvatarService {
         Avatar newAvatar = new Avatar();
         newAvatar.setAvatarName(request.avatarName());
         newAvatar.setObjectKey(objectKey);
-        newAvatar.setImageLink(generateObjectUrl(objectKey));
+        newAvatar.setImageUrl(generateObjectUrl(objectKey));
         return avatarRepository.save(newAvatar);
     }
 
