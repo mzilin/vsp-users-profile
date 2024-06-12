@@ -2,6 +2,7 @@ package com.mariuszilinskas.vsp.userprofileservice.service;
 
 import com.mariuszilinskas.vsp.userprofileservice.dto.CreateUserProfileRequest;
 import com.mariuszilinskas.vsp.userprofileservice.exception.EntityExistsException;
+import com.mariuszilinskas.vsp.userprofileservice.exception.ResourceNotFoundException;
 import com.mariuszilinskas.vsp.userprofileservice.model.Avatar;
 import com.mariuszilinskas.vsp.userprofileservice.model.UserProfile;
 import com.mariuszilinskas.vsp.userprofileservice.repository.UserProfileRepository;
@@ -13,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -101,6 +104,59 @@ public class UserProfileServiceImplTest {
         verify(profileRepository, times(1)).existsByUserIdAndProfileName(any(UUID.class), anyString());
         verify(avatarService, never()).getAvatar(any(UUID.class));
         verify(profileRepository, never()).save(any(UserProfile.class));
+    }
+
+    // ------------------------------------
+
+    @Test
+    void testGetAllUserProfiles_Success() {
+        // Arrange
+        List<UserProfile> avatars = List.of(profile, profile2);
+        when(profileRepository.findAllByUserId(userId)).thenReturn(avatars);
+
+        // Act
+        List<UserProfile> response = profileService.getAllUserProfiles(userId);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(2, response.size());
+        assertEquals(profile.getId(), response.get(0).getId());
+        assertEquals(profile.getProfileName(), response.get(0).getProfileName());
+        assertEquals(profile2.getId(), response.get(1).getId());
+        assertEquals(profile2.getProfileName(), response.get(1).getProfileName());
+
+        verify(profileRepository, times(1)).findAllByUserId(userId);
+    }
+
+    // ------------------------------------
+
+    @Test
+    void testGetUserProfile_Success() {
+        // Arrange
+        when(profileRepository.findByIdAndUserId(avatarId, userId)).thenReturn(Optional.of(profile));
+
+        // Act
+        UserProfile response = profileService.getUserProfile(userId, avatarId);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(profile.getId(), response.getId());
+        assertEquals(profile.getProfileName(), response.getProfileName());
+
+        verify(profileRepository, times(1)).findByIdAndUserId(avatarId, userId);
+    }
+
+    @Test
+    void testGetUserProfile_NonExistentUserProfile() {
+        // Arrange
+        UUID nonExistentProfileId = UUID.randomUUID();
+        when(profileRepository.findByIdAndUserId(nonExistentProfileId, userId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> profileService.getUserProfile(userId, nonExistentProfileId));
+
+        // Assert
+        verify(profileRepository, times(1)).findByIdAndUserId(nonExistentProfileId, userId);
     }
 
     // ------------------------------------
