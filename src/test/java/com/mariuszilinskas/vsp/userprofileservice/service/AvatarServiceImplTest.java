@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -105,6 +104,21 @@ public class AvatarServiceImplTest {
     }
 
     @Test
+    void testCreateAvatar_S3BucketError() throws IOException {
+        // Arrange
+        when(avatarRepository.existsByAvatarName(createRequest.avatarName())).thenReturn(false);
+        doThrow(FileUploadException.class).when(s3Service).uploadFile(anyString(), anyString(), eq(createRequest.file()));
+
+        // Act & Assert
+        assertThrows(FileUploadException.class, () -> avatarService.createAvatar(createRequest));
+
+        // Assert
+        verify(avatarRepository, times(1)).existsByAvatarName(createRequest.avatarName());
+        verify(s3Service, times(1)).uploadFile(anyString(), anyString(), eq(createRequest.file()));
+        verify(avatarRepository, never()).save(any(Avatar.class));
+    }
+
+    @Test
     void testCreateAvatar_NameExists() throws IOException {
         // Arrange
         when(avatarRepository.existsByAvatarName(createRequest.avatarName())).thenReturn(true);
@@ -116,7 +130,6 @@ public class AvatarServiceImplTest {
         verify(s3Service, never()).uploadFile(anyString(), anyString(), any(MultipartFile.class));
         verify(avatarRepository, never()).save(any(Avatar.class));
     }
-
 
     @Test
     void testCreateAvatar_IncorrectFile() throws IOException {
