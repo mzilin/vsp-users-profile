@@ -22,19 +22,20 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserProfileController {
 
-    private final UserProfileService userProfileService;
+    private final UserProfileService profileService;
 
-    @PostMapping
+    @PostMapping("/{userId}")
     public ResponseEntity<UserProfile> createUserProfile(
+            @PathVariable UUID userId,
             @Valid @RequestBody CreateUserProfileRequest request
     ) {
-        UserProfile response = userProfileService.createUserProfile(request);
+        UserProfile response = profileService.createUserProfile(userId, request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<List<UserProfile>> getAllUserProfiles(@PathVariable UUID userId) {
-        List<UserProfile> response = userProfileService.getAllUserProfiles(userId);
+        List<UserProfile> response = profileService.getAllUserProfiles(userId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -43,7 +44,7 @@ public class UserProfileController {
             @PathVariable UUID userId,
             @PathVariable UUID profileId
     ) {
-        UserProfile response = userProfileService.getUserProfile(userId, profileId);
+        UserProfile response = profileService.getUserProfile(userId, profileId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -53,7 +54,7 @@ public class UserProfileController {
             @PathVariable UUID profileId,
             @Valid @RequestBody CreateUserProfileRequest request
     ) {
-        UserProfile response = userProfileService.updateUserProfile(userId, profileId, request);
+        UserProfile response = profileService.updateUserProfile(userId, profileId, request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -62,7 +63,13 @@ public class UserProfileController {
             @PathVariable UUID userId,
             @PathVariable UUID profileId
     ) {
-        userProfileService.deleteUserProfile(userId, profileId);
+        profileService.deleteUserProfile(userId, profileId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteAllUserProfiles(@PathVariable UUID userId) {
+        profileService.deleteAllUserProfiles(userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
