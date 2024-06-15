@@ -1,5 +1,6 @@
 package com.mariuszilinskas.vsp.userprofileservice.service;
 
+import com.mariuszilinskas.vsp.userprofileservice.dto.CreateDefaultUserProfilesRequest;
 import com.mariuszilinskas.vsp.userprofileservice.dto.CreateUserProfileRequest;
 import com.mariuszilinskas.vsp.userprofileservice.exception.EntityExistsException;
 import com.mariuszilinskas.vsp.userprofileservice.exception.ResourceNotFoundException;
@@ -40,6 +41,7 @@ public class UserProfileServiceImplTest {
     private final UserProfile profile = new UserProfile();
     private final UserProfile profile2 = new UserProfile();
     private CreateUserProfileRequest createRequest;
+    private CreateDefaultUserProfilesRequest createDefaultRequest;
 
     // ------------------------------------
 
@@ -59,11 +61,62 @@ public class UserProfileServiceImplTest {
         profile2.setAvatar(avatar);
         profile2.setKid(true);
 
+        createDefaultRequest = new CreateDefaultUserProfilesRequest(userId, "Name");
+
         createRequest = new CreateUserProfileRequest(
                 profile.getProfileName(),
                 profile.getAvatar().getId(),
                 profile.isKid()
         );
+
+    }
+
+    // ------------------------------------
+
+    @Test
+    void testCreateDefaultUserProfile_Success() {
+        // Arrange
+        ArgumentCaptor<UserProfile> captor = ArgumentCaptor.forClass(UserProfile.class);
+
+        when(avatarService.getRandomAvatar()).thenReturn(avatar);
+        when(profileRepository.save(captor.capture())).thenReturn(profile);
+
+        // Act
+        UserProfile response = profileService.createDefaultUserProfile(createDefaultRequest);
+
+        // Assert
+        assertNotNull(response);
+
+        verify(avatarService, times(1)).getRandomAvatar();
+        verify(profileRepository, times(1)).save(captor.capture());
+
+        UserProfile savedProfile = captor.getValue();
+        assertEquals(createDefaultRequest.firstName(), savedProfile.getProfileName());
+        assertEquals(avatarId, savedProfile.getAvatar().getId());
+        assertEquals(false, savedProfile.isKid());
+    }
+
+    @Test
+    void testCreateDefaultUserProfile_NoAvatarFound() {
+        // Arrange
+        ArgumentCaptor<UserProfile> captor = ArgumentCaptor.forClass(UserProfile.class);
+
+        when(avatarService.getRandomAvatar()).thenReturn(null);
+        when(profileRepository.save(captor.capture())).thenReturn(profile);
+
+        // Act
+        UserProfile response = profileService.createDefaultUserProfile(createDefaultRequest);
+
+        // Assert
+        assertNotNull(response);
+
+        verify(avatarService, times(1)).getRandomAvatar();
+        verify(profileRepository, times(1)).save(captor.capture());
+
+        UserProfile savedProfile = captor.getValue();
+        assertEquals(createDefaultRequest.firstName(), savedProfile.getProfileName());
+        assertEquals(null, savedProfile.getAvatar());
+        assertEquals(false, savedProfile.isKid());
     }
 
     // ------------------------------------
