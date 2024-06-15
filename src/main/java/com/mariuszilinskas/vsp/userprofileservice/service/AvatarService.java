@@ -15,6 +15,8 @@ public interface AvatarService {
 
     Avatar getAvatar(UUID avatarId);
 
+    Avatar getRandomAvatar();
+
     void deleteAvatar(UUID avatarId);
 
 }

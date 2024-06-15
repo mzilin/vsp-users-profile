@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -196,6 +197,36 @@ public class AvatarServiceImplTest {
 
         // Assert
         verify(avatarRepository, times(1)).findById(nonExistentAvatarId);
+    }
+
+    // ------------------------------------
+
+    @Test
+    void testGetRandomAvatar_Success() {
+        // Arrange
+        List<Avatar> avatars = List.of(avatar, avatar2);
+        when(avatarRepository.findAll()).thenReturn(avatars);
+
+        // Act
+        Avatar response = avatarService.getRandomAvatar();
+
+        // Assert
+        assertNotNull(response);
+        assertTrue(avatars.contains(response));
+        verify(avatarRepository, times(1)).findAll();
+    }
+
+    @Test
+    void testGetRandomAvatar_NoAvatarsFound_ReturnsNull() {
+        // Arrange
+        when(avatarRepository.findAll()).thenReturn(Collections.emptyList());
+
+        // Act & Assert
+        Avatar result = avatarService.getRandomAvatar();
+
+        // Assert
+        assertNull(result);
+        verify(avatarRepository, times(1)).findAll();
     }
 
     // ------------------------------------

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
@@ -95,6 +96,20 @@ public class AvatarServiceImpl implements AvatarService {
     public Avatar getAvatar(UUID avatarId) {
         logger.info("Getting Avatar [id: '{}']", avatarId);
         return findAvatarById(avatarId);
+    }
+
+    /**
+     * Used when choosing random avatars from new users
+     */
+    @Override
+    public Avatar getRandomAvatar() {
+        logger.info("Getting random Avatar");
+        List<Avatar> avatars = avatarRepository.findAll();
+        if (avatars.isEmpty()) {
+            return null;
+        }
+        Random random = new Random();
+        return avatars.get(random.nextInt(avatars.size()));
     }
 
     @Override
