@@ -28,6 +28,7 @@ ext {
 dependencies {
     // Core Spring Boot
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -40,6 +41,9 @@ dependencies {
     // Database-related
     implementation 'org.flywaydb:flyway-core'
     runtimeOnly 'org.postgresql:postgresql'
+
+    // Data-storage-related
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.739'
 
     // Other dependencies
     implementation 'org.jetbrains:annotations:24.0.1'
