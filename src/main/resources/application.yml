@@ -57,8 +57,10 @@ rabbitmq:
   exchange: ${RMQ_EXCHANGE}
   queues:
     profile-setup: ${RMQ_PROFILE_SETUP_Q}
+    delete-user-data: ${RMQ_DELETE_USER_DATA_Q}
   routing-keys:
     profile-setup: ${RMQ_PROFILE_SETUP_RK}
+    delete-user-data: ${RMQ_DELETE_USER_DATA_RK}
 
 # Management properties
 management:
