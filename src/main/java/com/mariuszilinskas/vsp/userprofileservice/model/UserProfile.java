@@ -30,7 +30,7 @@ public class UserProfile {
     private String profileName;
 
     @ManyToOne
-    @JoinColumn(name = "avatar_id", nullable = false)
+    @JoinColumn(name = "avatar_id")
     private Avatar avatar;
 
     @Column(name = "is_kid")
