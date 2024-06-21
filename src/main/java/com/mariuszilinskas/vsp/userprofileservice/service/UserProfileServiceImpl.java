@@ -1,6 +1,6 @@
 package com.mariuszilinskas.vsp.userprofileservice.service;
 
-import com.mariuszilinskas.vsp.userprofileservice.dto.CreateDefaultUserProfileRequest;
+import com.mariuszilinskas.vsp.userprofileservice.dto.CreateUserDefaultProfileRequest;
 import com.mariuszilinskas.vsp.userprofileservice.dto.CreateUserProfileRequest;
 import com.mariuszilinskas.vsp.userprofileservice.exception.EntityExistsException;
 import com.mariuszilinskas.vsp.userprofileservice.exception.ResourceNotFoundException;
@@ -29,12 +29,12 @@ public class UserProfileServiceImpl implements UserProfileService {
     private final AvatarService avatarService;
 
     @Override
-    public UserProfile createDefaultUserProfile(CreateDefaultUserProfileRequest request) {
+    public UserProfile createDefaultUserProfile(CreateUserDefaultProfileRequest request) {
         logger.info("Creating default User Profile for User [userId: '{}']", request.userId());
         return createDefaultProfile(request);
     }
 
-    private UserProfile createDefaultProfile(CreateDefaultUserProfileRequest request) {
+    private UserProfile createDefaultProfile(CreateUserDefaultProfileRequest request) {
         UserProfile profile = new UserProfile();
         profile.setUserId(request.userId());
         profile.setProfileName(request.firstName());

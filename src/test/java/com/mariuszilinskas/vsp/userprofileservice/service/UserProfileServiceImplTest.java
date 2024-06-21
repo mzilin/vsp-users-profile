@@ -1,6 +1,6 @@
 package com.mariuszilinskas.vsp.userprofileservice.service;
 
-import com.mariuszilinskas.vsp.userprofileservice.dto.CreateDefaultUserProfileRequest;
+import com.mariuszilinskas.vsp.userprofileservice.dto.CreateUserDefaultProfileRequest;
 import com.mariuszilinskas.vsp.userprofileservice.dto.CreateUserProfileRequest;
 import com.mariuszilinskas.vsp.userprofileservice.exception.EntityExistsException;
 import com.mariuszilinskas.vsp.userprofileservice.exception.ResourceNotFoundException;
@@ -41,7 +41,7 @@ public class UserProfileServiceImplTest {
     private final UserProfile profile = new UserProfile();
     private final UserProfile profile2 = new UserProfile();
     private CreateUserProfileRequest createRequest;
-    private CreateDefaultUserProfileRequest createDefaultRequest;
+    private CreateUserDefaultProfileRequest createDefaultRequest;
 
     // ------------------------------------
 
@@ -61,7 +61,7 @@ public class UserProfileServiceImplTest {
         profile2.setAvatar(avatar);
         profile2.setKid(true);
 
-        createDefaultRequest = new CreateDefaultUserProfileRequest(userId, "Name");
+        createDefaultRequest = new CreateUserDefaultProfileRequest(userId, "Name");
 
         createRequest = new CreateUserProfileRequest(
                 profile.getProfileName(),

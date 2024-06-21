@@ -1,6 +1,6 @@
 package com.mariuszilinskas.vsp.userprofileservice.service;
 
-import com.mariuszilinskas.vsp.userprofileservice.dto.CreateDefaultUserProfileRequest;
+import com.mariuszilinskas.vsp.userprofileservice.dto.CreateUserDefaultProfileRequest;
 import com.mariuszilinskas.vsp.userprofileservice.dto.CreateUserProfileRequest;
 import com.mariuszilinskas.vsp.userprofileservice.model.UserProfile;
 
@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface UserProfileService {
 
-    UserProfile createDefaultUserProfile(CreateDefaultUserProfileRequest request);
+    UserProfile createDefaultUserProfile(CreateUserDefaultProfileRequest request);
 
     UserProfile createUserProfile(UUID userId, CreateUserProfileRequest request);
 
