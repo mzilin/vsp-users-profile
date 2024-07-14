@@ -23,6 +23,8 @@ This microservice utilises a comprehensive suite of technologies and dependencie
   - **Netflix Eureka Client**: Enables the microservice to register with a Eureka server for service discovery.
   - **OpenFeign Client**: Simplifies building and managing declarative REST clients that automatically integrate with service discovery.
 
+- **AWS Java SDK S3**: Communicates with AWS S3 Cloud Storage service.
+
 - **Java** `JDK 17`: Essential for secure, portable, high-performance software development.
 
 - **Lombok**: Reduces boilerplate in Java code significantly, automating the generation of getters, setters, constructors, and other common methods.
@@ -58,7 +60,7 @@ Ensure that PostgreSQL is correctly set up and running, as it is required for th
 
 ## Installation
 
-Follow these steps to get the User Service up and running:
+Follow these steps to get the User Profile Service up and running:
 
 1. Navigate into the app's directory
 ```shell
