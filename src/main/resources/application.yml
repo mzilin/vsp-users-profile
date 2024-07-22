@@ -12,7 +12,7 @@ info:
 # Spring application properties
 spring:
   application:
-    name: user_profiles
+    name: profiles
   profiles:
     active: dev
   config:
