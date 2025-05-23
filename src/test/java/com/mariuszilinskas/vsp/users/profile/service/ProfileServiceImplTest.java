@@ -5,8 +5,8 @@ import com.mariuszilinskas.vsp.users.profile.dto.CreateUserProfileRequest;
 import com.mariuszilinskas.vsp.users.profile.exception.EntityExistsException;
 import com.mariuszilinskas.vsp.users.profile.exception.ResourceNotFoundException;
 import com.mariuszilinskas.vsp.users.profile.model.Avatar;
-import com.mariuszilinskas.vsp.users.profile.model.UserProfile;
-import com.mariuszilinskas.vsp.users.profile.repository.UserProfileRepository;
+import com.mariuszilinskas.vsp.users.profile.model.Profile;
+import com.mariuszilinskas.vsp.users.profile.repository.ProfileRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,23 +23,23 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserProfileServiceImplTest {
+public class ProfileServiceImplTest {
 
     @Mock
-    private UserProfileRepository profileRepository;
+    private ProfileRepository profileRepository;
 
     @Mock
     private AvatarService avatarService;
 
     @InjectMocks
-    private UserProfileServiceImpl profileService;
+    private ProfileServiceImpl profileService;
 
     private final UUID userId = UUID.randomUUID();
     private final UUID profileId = UUID.randomUUID();
     private final UUID avatarId = UUID.randomUUID();
     private final Avatar avatar = new Avatar();
-    private final UserProfile profile = new UserProfile();
-    private final UserProfile profile2 = new UserProfile();
+    private final Profile profile = new Profile();
+    private final Profile profile2 = new Profile();
     private CreateUserProfileRequest createRequest;
     private CreateUserDefaultProfileRequest createDefaultRequest;
 
@@ -76,13 +76,13 @@ public class UserProfileServiceImplTest {
     @Test
     void testCreateDefaultUserProfile_Success() {
         // Arrange
-        ArgumentCaptor<UserProfile> captor = ArgumentCaptor.forClass(UserProfile.class);
+        ArgumentCaptor<Profile> captor = ArgumentCaptor.forClass(Profile.class);
 
         when(avatarService.getRandomAvatar()).thenReturn(avatar);
         when(profileRepository.save(captor.capture())).thenReturn(profile);
 
         // Act
-        UserProfile response = profileService.createDefaultUserProfile(createDefaultRequest);
+        Profile response = profileService.createDefaultUserProfile(createDefaultRequest);
 
         // Assert
         assertNotNull(response);
@@ -90,7 +90,7 @@ public class UserProfileServiceImplTest {
         verify(avatarService, times(1)).getRandomAvatar();
         verify(profileRepository, times(1)).save(captor.capture());
 
-        UserProfile savedProfile = captor.getValue();
+        Profile savedProfile = captor.getValue();
         assertEquals(createDefaultRequest.firstName(), savedProfile.getProfileName());
         assertEquals(avatarId, savedProfile.getAvatar().getId());
         assertEquals(false, savedProfile.isKid());
@@ -99,13 +99,13 @@ public class UserProfileServiceImplTest {
     @Test
     void testCreateDefaultUserProfile_NoAvatarFound() {
         // Arrange
-        ArgumentCaptor<UserProfile> captor = ArgumentCaptor.forClass(UserProfile.class);
+        ArgumentCaptor<Profile> captor = ArgumentCaptor.forClass(Profile.class);
 
         when(avatarService.getRandomAvatar()).thenReturn(null);
         when(profileRepository.save(captor.capture())).thenReturn(profile);
 
         // Act
-        UserProfile response = profileService.createDefaultUserProfile(createDefaultRequest);
+        Profile response = profileService.createDefaultUserProfile(createDefaultRequest);
 
         // Assert
         assertNotNull(response);
@@ -113,7 +113,7 @@ public class UserProfileServiceImplTest {
         verify(avatarService, times(1)).getRandomAvatar();
         verify(profileRepository, times(1)).save(captor.capture());
 
-        UserProfile savedProfile = captor.getValue();
+        Profile savedProfile = captor.getValue();
         assertEquals(createDefaultRequest.firstName(), savedProfile.getProfileName());
         assertEquals(null, savedProfile.getAvatar());
         assertEquals(false, savedProfile.isKid());
@@ -124,14 +124,14 @@ public class UserProfileServiceImplTest {
     @Test
     void testCreateUserProfile_Success() {
         // Arrange
-        ArgumentCaptor<UserProfile> captor = ArgumentCaptor.forClass(UserProfile.class);
+        ArgumentCaptor<Profile> captor = ArgumentCaptor.forClass(Profile.class);
 
         when(profileRepository.existsByUserIdAndProfileName(userId, createRequest.profileName())).thenReturn(false);
         when(avatarService.getAvatar(createRequest.avatarId())).thenReturn(avatar);
         when(profileRepository.save(captor.capture())).thenReturn(profile);
 
         // Act
-        UserProfile response = profileService.createUserProfile(userId, createRequest);
+        Profile response = profileService.createUserProfile(userId, createRequest);
 
         // Assert
         assertNotNull(response);
@@ -140,7 +140,7 @@ public class UserProfileServiceImplTest {
         verify(avatarService, times(1)).getAvatar(avatarId);
         verify(profileRepository, times(1)).save(captor.capture());
 
-        UserProfile savedProfile = captor.getValue();
+        Profile savedProfile = captor.getValue();
         assertEquals(createRequest.profileName(), savedProfile.getProfileName());
         assertEquals(createRequest.avatarId(), savedProfile.getAvatar().getId());
         assertEquals(createRequest.isKid(), savedProfile.isKid());
@@ -156,7 +156,7 @@ public class UserProfileServiceImplTest {
 
         verify(profileRepository, times(1)).existsByUserIdAndProfileName(any(UUID.class), anyString());
         verify(avatarService, never()).getAvatar(any(UUID.class));
-        verify(profileRepository, never()).save(any(UserProfile.class));
+        verify(profileRepository, never()).save(any(Profile.class));
     }
 
     // ------------------------------------
@@ -164,11 +164,11 @@ public class UserProfileServiceImplTest {
     @Test
     void testGetAllUserProfiles_Success() {
         // Arrange
-        List<UserProfile> avatars = List.of(profile, profile2);
+        List<Profile> avatars = List.of(profile, profile2);
         when(profileRepository.findAllByUserId(userId)).thenReturn(avatars);
 
         // Act
-        List<UserProfile> response = profileService.getAllUserProfiles(userId);
+        List<Profile> response = profileService.getAllUserProfiles(userId);
 
         // Assert
         assertNotNull(response);
@@ -189,7 +189,7 @@ public class UserProfileServiceImplTest {
         when(profileRepository.findByIdAndUserId(avatarId, userId)).thenReturn(Optional.of(profile));
 
         // Act
-        UserProfile response = profileService.getUserProfile(userId, avatarId);
+        Profile response = profileService.getUserProfile(userId, avatarId);
 
         // Assert
         assertNotNull(response);
@@ -242,7 +242,7 @@ public class UserProfileServiceImplTest {
 
         // Assert
         verify(profileRepository, times(1)).findByIdAndUserId(nonExistentAvatarId, userId);
-        verify(profileRepository, never()).delete(any(UserProfile.class));
+        verify(profileRepository, never()).delete(any(Profile.class));
     }
 
     // ------------------------------------

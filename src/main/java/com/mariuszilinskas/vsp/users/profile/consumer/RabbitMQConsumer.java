@@ -1,7 +1,7 @@
 package com.mariuszilinskas.vsp.users.profile.consumer;
 
 import com.mariuszilinskas.vsp.users.profile.dto.CreateUserDefaultProfileRequest;
-import com.mariuszilinskas.vsp.users.profile.service.UserProfileService;
+import com.mariuszilinskas.vsp.users.profile.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,18 +15,18 @@ import java.util.UUID;
 public class RabbitMQConsumer {
 
     private static final Logger logger = LoggerFactory.getLogger(RabbitMQConsumer.class);
-    private final UserProfileService userProfileService;
+    private final ProfileService profileService;
 
     @RabbitListener(queues = "${rabbitmq.queues.profile-setup}")
     public void consumeCreateDefaultUserProfileMessage(CreateUserDefaultProfileRequest request) {
         logger.info("Received request to create user profile: {}", request);
-        userProfileService.createDefaultUserProfile(request);
+        profileService.createDefaultUserProfile(request);
     }
 
     @RabbitListener(queues = "${rabbitmq.queues.delete-user-data}")
     public void consumeDeleteUserDataMessage(UUID userId) {
         logger.info("Received request to delete user data for User [userId: {}]", userId);
-        userProfileService.deleteAllUserProfiles(userId);
+        profileService.deleteAllUserProfiles(userId);
     }
 
 }

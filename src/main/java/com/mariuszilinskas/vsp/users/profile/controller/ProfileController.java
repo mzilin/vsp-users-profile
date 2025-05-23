@@ -1,8 +1,8 @@
 package com.mariuszilinskas.vsp.users.profile.controller;
 
 import com.mariuszilinskas.vsp.users.profile.dto.CreateUserProfileRequest;
-import com.mariuszilinskas.vsp.users.profile.model.UserProfile;
-import com.mariuszilinskas.vsp.users.profile.service.UserProfileService;
+import com.mariuszilinskas.vsp.users.profile.model.Profile;
+import com.mariuszilinskas.vsp.users.profile.service.ProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,41 +20,41 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/profile")
 @RequiredArgsConstructor
-public class UserProfileController {
+public class ProfileController {
 
-    private final UserProfileService profileService;
+    private final ProfileService profileService;
 
     @PostMapping("/{userId}")
-    public ResponseEntity<UserProfile> createUserProfile(
+    public ResponseEntity<Profile> createUserProfile(
             @PathVariable UUID userId,
             @Valid @RequestBody CreateUserProfileRequest request
     ) {
-        UserProfile response = profileService.createUserProfile(userId, request);
+        Profile response = profileService.createUserProfile(userId, request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<UserProfile>> getAllUserProfiles(@PathVariable UUID userId) {
-        List<UserProfile> response = profileService.getAllUserProfiles(userId);
+    public ResponseEntity<List<Profile>> getAllUserProfiles(@PathVariable UUID userId) {
+        List<Profile> response = profileService.getAllUserProfiles(userId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}/{profileId}")
-    public ResponseEntity<UserProfile> getUserProfile(
+    public ResponseEntity<Profile> getUserProfile(
             @PathVariable UUID userId,
             @PathVariable UUID profileId
     ) {
-        UserProfile response = profileService.getUserProfile(userId, profileId);
+        Profile response = profileService.getUserProfile(userId, profileId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/{userId}/{profileId}")
-    public ResponseEntity<UserProfile> updateUserProfile(
+    public ResponseEntity<Profile> updateUserProfile(
             @PathVariable UUID userId,
             @PathVariable UUID profileId,
             @Valid @RequestBody CreateUserProfileRequest request
     ) {
-        UserProfile response = profileService.updateUserProfile(userId, profileId, request);
+        Profile response = profileService.updateUserProfile(userId, profileId, request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

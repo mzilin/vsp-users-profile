@@ -5,9 +5,9 @@ import com.mariuszilinskas.vsp.users.profile.config.FeignConfig;
 import com.mariuszilinskas.vsp.users.profile.config.RabbitMQConfig;
 import com.mariuszilinskas.vsp.users.profile.consumer.RabbitMQConsumer;
 import com.mariuszilinskas.vsp.users.profile.controller.AvatarAdminController;
-import com.mariuszilinskas.vsp.users.profile.controller.UserProfileController;
+import com.mariuszilinskas.vsp.users.profile.controller.ProfileController;
 import com.mariuszilinskas.vsp.users.profile.repository.AvatarRepository;
-import com.mariuszilinskas.vsp.users.profile.repository.UserProfileRepository;
+import com.mariuszilinskas.vsp.users.profile.repository.ProfileRepository;
 import com.mariuszilinskas.vsp.users.profile.service.AwsS3ServiceImpl;
 import com.mariuszilinskas.vsp.users.profile.service.AvatarServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -32,13 +32,13 @@ class ProfileServiceApplicationTests {
     private AvatarRepository avatarRepository;
 
     @Autowired
-    private UserProfileRepository userProfileRepository;
+    private ProfileRepository profileRepository;
 
     @Autowired
     private AvatarAdminController avatarAdminController;
 
     @Autowired
-    private UserProfileController userProfileController;
+    private ProfileController profileController;
 
     @Autowired
     private AwsS3Config awsS3Config;
@@ -73,7 +73,7 @@ class ProfileServiceApplicationTests {
 
     @Test
     void userProfileRepositoryBeanLoads() {
-        assertNotNull(userProfileRepository, "User Profile Repository should have been auto-wired by Spring Context");
+        assertNotNull(profileRepository, "User Profile Repository should have been auto-wired by Spring Context");
     }
 
     @Test
@@ -83,7 +83,7 @@ class ProfileServiceApplicationTests {
 
     @Test
     void userProfileControllerBeanLoads() {
-        assertNotNull(userProfileController, "User Profile Controller should have been auto-wired by Spring Context");
+        assertNotNull(profileController, "User Profile Controller should have been auto-wired by Spring Context");
     }
 
     @Test

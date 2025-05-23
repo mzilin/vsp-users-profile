@@ -1,6 +1,6 @@
 package com.mariuszilinskas.vsp.users.profile.repository;
 
-import com.mariuszilinskas.vsp.users.profile.model.UserProfile;
+import com.mariuszilinskas.vsp.users.profile.model.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,15 +14,15 @@ import java.util.UUID;
  * @author Marius Zilinskas
  */
 @Repository
-public interface UserProfileRepository extends JpaRepository<UserProfile, UUID> {
+public interface ProfileRepository extends JpaRepository<Profile, UUID> {
 
     boolean existsByUserIdAndProfileName(UUID userId, String profileName);
 
     boolean existsByUserIdAndProfileNameAndIdNot(UUID userId, String profileName, UUID id);
 
-    List<UserProfile> findAllByUserId(UUID userId);
+    List<Profile> findAllByUserId(UUID userId);
 
-    Optional<UserProfile> findByIdAndUserId(UUID profileId, UUID userId);
+    Optional<Profile> findByIdAndUserId(UUID profileId, UUID userId);
 
     void deleteAllByUserId(UUID userId);
 
