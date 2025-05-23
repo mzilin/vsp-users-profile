@@ -1,18 +1,18 @@
 # Server properties
 server:
-  port: 8093
+  port: 8111
 
 # Information for the info endpoint
 info:
   app:
     environment: DEV
-    name: User Profile Service
-    description: User Profile Service Local Instance
+    name: profile-service
+    description: Profile Service - Local Instance
 
 # Spring application properties
 spring:
   application:
-    name: profiles
+    name: profile-service
   profiles:
     active: dev
   config:
