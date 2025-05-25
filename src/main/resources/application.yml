@@ -45,8 +45,8 @@ aws:
 # Eureka configuration
 eureka:
   client:
-    fetchRegistry: ${EUREKA_DISCOVERY_ENABLED}
-    registerWithEureka: ${EUREKA_DISCOVERY_ENABLED}
+    fetchRegistry: true
+    registerWithEureka: true
     serviceUrl:
       defaultZone: ${EUREKA_CLIENT_DEFAULT_ZONE}
   instance:
