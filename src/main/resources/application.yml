@@ -6,13 +6,13 @@ server:
 info:
   app:
     environment: DEV
-    name: profile-service
+    name: ${spring.application.name}
     description: Profile Service - Local Instance
 
 # Spring application properties
 spring:
   application:
-    name: profile-service
+    name: users-profile
   profiles:
     active: dev
   config:
