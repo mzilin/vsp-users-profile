@@ -1,66 +1,66 @@
 # Server properties
 server:
-  port: 8093
+  port: 8111
 
 # Information for the info endpoint
 info:
   app:
     environment: DEV
-    name: User Profile Service
-    description: User Profile Service Local Instance
+    name: ${spring.application.name}
+    description: Profile Service - Local Instance
 
 # Spring application properties
 spring:
   application:
-    name: profiles
+    name: users-profile
   profiles:
     active: dev
   config:
     import:
-      - optional:configserver:${CONFIG_SERVER_URL}
+      - optional:configserver:discovery://config-server
       - optional:file:./env.properties
   datasource:
-    url: ${DB_URI}
-    driverClassName: org.postgresql.Driver
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: ${DB_URL:jdbc:h2:mem:testdb}
+    driverClassName: ${DB_DRIVER_CLASS:org.h2.Driver}
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:}
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database-platform: ${DB_DIALECT:org.hibernate.dialect.H2Dialect}
     hibernate:
       ddl-auto: update
   rabbitmq:
-    host: ${RMQ_HOST}
-    port: ${RMQ_PORT}
-    username: ${RMQ_USERNAME}
-    password: ${RMQ_PASSWORD}
+    host: ${RMQ_HOST:localhost}
+    port: ${RMQ_PORT:5672}
+    username: ${RMQ_USERNAME:guest}
+    password: ${RMQ_PASSWORD:guest}
 
 # AWS configuration
 aws:
-  accessKey: ${AWS_ACCESS_KEY}
-  secretKey: ${AWS_SECRET_KEY}
+  accessKey: ${AWS_ACCESS_KEY:dummy-key}
+  secretKey: ${AWS_SECRET_KEY:dummy-secret}
   s3:
-    region: ${AWS_S3_REGION}
-    avatarBucketName: ${AWS_AVATAR_BUCKET_NAME}
+    region: ${AWS_S3_REGION:dummy-region}
+    avatarBucketName: ${AWS_AVATAR_BUCKET_NAME:dummy-bucket}
 
 # Eureka configuration
 eureka:
   client:
-    fetchRegistry: true
-    registerWithEureka: true
+    fetchRegistry: ${EUREKA_DISCOVERY_ENABLED:false}
+    registerWithEureka: ${EUREKA_DISCOVERY_ENABLED:false}
     serviceUrl:
-      defaultZone: ${EUREKA_CLIENT_DEFAULT_ZONE}
+      defaultZone: ${EUREKA_CLIENT_DEFAULT_ZONE:http://localhost:8761/eureka/}
   instance:
     preferIpAddress: true
 
 # RabbitMQ settings
 rabbitmq:
-  exchange: ${RMQ_EXCHANGE}
+  exchange: ${RMQ_EXCHANGE:dummy-exchange}
   queues:
-    profile-setup: ${RMQ_PROFILE_SETUP_Q}
-    delete-user-data: ${RMQ_DELETE_USER_DATA_Q}
+    profile-setup: ${RMQ_PROFILE_SETUP_Q:dummy-queue}
+    delete-user-data: ${RMQ_DELETE_USER_DATA_Q:dummy-queue}
   routing-keys:
-    profile-setup: ${RMQ_PROFILE_SETUP_RK}
-    delete-user-data: ${RMQ_DELETE_USER_DATA_RK}
+    profile-setup: ${RMQ_PROFILE_SETUP_RK:dummy-key}
+    delete-user-data: ${RMQ_DELETE_USER_DATA_RK:dummy-key}
 
 # Management properties
 management:
@@ -76,4 +76,4 @@ logging:
   level:
     root: INFO
     org.springframework.web: DEBUG
-    org.springframework.security: DEBUG
+    com.mariuszilinskas.vsp: DEBUG
